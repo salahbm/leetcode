@@ -1,28 +1,38 @@
-```
-The given code snippet is used to determine the length of the shortest string in an array of strings (strs). Let’s break it down step by step:
+# Longest Common Prefix in an Array of Strings
 
-Understanding the .reduce() Method
+## Understanding `.reduce()` Method for Finding Shortest String Length
 
-The .reduce() method iterates over an array and accumulates a single value based on a provided callback function.
+The given code snippet is used to determine the length of the shortest string in an array of strings (`strs`). Let’s break it down step by step:
 
-Breaking Down the Code
+### `.reduce()` Method
 
+The `.reduce()` method iterates over an array and accumulates a single value based on a provided callback function.
+
+### Breaking Down the Code
+
+```typescript
 const shortest = strs.reduce(
   (minLength, currentStr) => Math.min(minLength, currentStr.length),
   Infinity
 );
+```
 
-	1.	Initial Value (Infinity):
-	•	The second argument to .reduce() (Infinity) is the starting value (minLength). This ensures that any string length encountered will be smaller.
-	2.	Iterating Over Each String (currentStr):
-	•	For each string in strs, we compare its length (currentStr.length) with minLength.
-	•	Math.min(minLength, currentStr.length) ensures that minLength always holds the shortest length encountered so far.
-	3.	Final Result (shortest):
-	•	After all iterations, shortest holds the length of the shortest string in strs.
+1. **Initial Value (`Infinity`)**:
 
-Example Execution
+   - The second argument to `.reduce()` (`Infinity`) is the starting value (`minLength`). This ensures that any string length encountered will be smaller.
 
-const strs = ["apple", "app", "apricot"];
+2. **Iterating Over Each String (`currentStr`)**:
+
+   - For each string in `strs`, we compare its length (`currentStr.length`) with `minLength`.
+   - `Math.min(minLength, currentStr.length)` ensures that `minLength` always holds the shortest length encountered so far.
+
+3. **Final Result (`shortest`)**:
+   - After all iterations, `shortest` holds the length of the shortest string in `strs`.
+
+### Example Execution
+
+```typescript
+const strs = ['apple', 'app', 'apricot'];
 
 const shortest = strs.reduce(
   (minLength, currentStr) => Math.min(minLength, currentStr.length),
@@ -30,58 +40,98 @@ const shortest = strs.reduce(
 );
 
 console.log(shortest); // Output: 3
-
-	•	"apple" → min(∞, 5) → 5
-	•	"app" → min(5, 3) → 3
-	•	"apricot" → min(3, 7) → 3
-
-Thus, shortest = 3, which is the length of "app".
-
-Why Use Infinity?
-	•	If strs were empty ([]), reduce() would return Infinity, avoiding unintended behavior.
-	•	Any valid string length is always smaller than Infinity.
-
-This approach efficiently finds the shortest string length in O(n) time complexity, where n is the number of strings in strs.
 ```
+
+- **Iteration Steps**:
+  - `"apple"` → `min(∞, 5)` → `5`
+  - `"app"` → `min(5, 3)` → `3`
+  - `"apricot"` → `min(3, 7)` → `3`
+
+Thus, `shortest = 3`, which is the length of `"app"`.
+
+### Why Use `Infinity`?
+
+- If `strs` were empty (`[]`), `.reduce()` would return `Infinity`, avoiding unintended behavior.
+- Any valid string length is always smaller than `Infinity`.
+
+This approach efficiently finds the shortest string length in **O(n) time complexity**, where `n` is the number of strings in `strs`.
+
+---
+
+## Longest Common Prefix Algorithm
 
 The solution employs a simple yet effective algorithm that involves iterating over each character position of the strings in the array and comparing them to find the longest common prefix.
 
-Here's how the implementation works step by step:
+### **Implementation Steps**
 
-We start by looking at the first string in the array, strs[0], and assume that it could be the potential longest common prefix. We use this string as a reference to compare with all other strings.
+1. **Assumption of Initial Prefix**
 
-We then enter a for-loop, which iterates over the character indices of the first string. The variable i represents the index of the character we are currently checking.
+   - Start by looking at the first string in the array (`strs[0]`) as the potential longest common prefix.
 
-Within this loop, we initiate another for-loop that iterates through the remaining strings in the array—strs[1:].
+2. **Character-by-Character Comparison**
 
-For each string s in this inner loop, we perform two checks: a. If the current index i is greater than or equal to the length of the string s, this means we have reached the end of this string, and thus, it cannot have a longer common prefix. b. If the character at index i of the string s does not match the character at the same index in strs[0], this indicates that the current character does not form part of a common prefix.
+   - Iterate over the character indices of `strs[0]`, using `i` as the current index.
+   - For each index `i`, compare the character across all strings (`strs[1:]`).
 
-If either condition in the inner loop is true, we have identified the end of the common prefix, and we return the substring of the first string from index 0 to i, using s[:i]. This is the longest common prefix found up to that point.
+3. **Mismatch Detection**
 
-If the inner loop completes without triggering the return statement, it means that the current character at index i is shared by all strings checked, and thus, the loop continues to the next character.
+   - If `i` exceeds the length of any string, it means we have reached the end of that string, stopping further comparisons.
+   - If a character at index `i` in any string does not match the same index in `strs[0]`, the common prefix stops at this point.
 
-If the outer loop completes without any return, this indicates that every character of the first string strs[0] is part of the common prefix for all strings. Therefore, we can safely return strs[0] as the longest common prefix.
+4. **Return the Longest Common Prefix**
+   - If a mismatch is found, return the substring `strs[0][0:i]`.
+   - If the loop completes without mismatches, return `strs[0]`.
 
-This algorithm essentially implements a character-by-character comparison, making use of string slicing for efficient checking and early stopping as soon as a mismatch is found. No additional data structures are needed, thus the space complexity is kept to a minimum.
+### **Performance Optimization**
 
-The early return mechanism greatly improves performance by terminating the comparison as soon as the longest common prefix is established, without further unnecessary comparisons.
+- The early return mechanism improves efficiency by stopping as soon as a mismatch is found.
+- No additional data structures are used, keeping space complexity minimal.
+- The algorithm essentially scans characters column-wise, terminating as soon as discrepancies appear.
 
-The procedure can be visualized as lining up all the strings vertically and scanning down the columns (indices). Once a discrepancy is found in any column, we know that the common prefix can only be as long as the last column without discrepancies.
+### **Example Walkthrough**
 
-Example Walkthrough
-To illustrate the solution approach, let's take an example array of strings: ["cardboard", "cart", "carrot", "carbon"]. We want to find the longest common prefix among these strings.
+#### Given Strings:
 
-Initial Assumption: We start with the assumption that the first string "cardboard" is our longest common prefix candidate.
+```plaintext
+["cardboard", "cart", "carrot", "carbon"]
+```
 
-Character-by-Character Comparison:
+#### Execution Steps:
 
-We start comparing the first character 'c' from "cardboard" with the first character of all the other strings. All strings have 'c' as their first character.
-Next, we compare the second character 'a' from "cardboard" with the second character of the other strings. All strings have 'a' as their second character.
-We continue to the third character 'r' from "cardboard" and compare it with the third character of the other strings. All strings have 'r' as well.
-Mismatch and Early Termination:
+1. **Initial Assumption:**
 
-Now we move to the fourth character 'd' from "cardboard". However, when we compare it with the fourth character of "cart", we find that it is 't' and not 'd'. This is a mismatch.
-Since "cart" has no more characters to compare (it is shorter than "cardboard"), this is our signal to stop.
-Returning the Result: At this point, we found that all strings share the prefix "car". We return this prefix as it is the longest common prefix that can be formed from all given strings.
+   - Assume `"cardboard"` is the longest common prefix candidate.
 
-The longest common prefix based on our algorithm is "car". This was determined efficiently by stopping comparisons once the first mismatch occurred or a string ended, ensuring no extra work was done.
+2. **Character Comparisons:**
+
+   - Compare `'c'` from `"cardboard"` with all other strings: ✅ Match.
+   - Compare `'a'` from `"cardboard"`: ✅ Match.
+   - Compare `'r'` from `"cardboard"`: ✅ Match.
+   - Compare `'d'` from `"cardboard"` with `'t'` from `"cart"`: ❌ Mismatch.
+
+3. **Early Termination:**
+   - A mismatch is found at index `3`.
+   - The longest common prefix found is `"car"`.
+
+### **Final Output:**
+
+```typescript
+console.log(longestCommonPrefix(['cardboard', 'cart', 'carrot', 'carbon'])); // Output: "car"
+```
+
+---
+
+### **Time Complexity Analysis**
+
+- **Worst-case Complexity:** `O(n * m)`, where:
+  - `n` = number of strings.
+  - `m` = length of the shortest string.
+- This occurs when all characters match up to the shortest string.
+
+### **Alternative Optimizations**
+
+- **Binary Search:** Check mid-length prefixes and adjust accordingly.
+- **Sorting Approach:** Sort the strings and compare only the first and last.
+- **Trie Data Structure:** Efficient for handling a large dataset of words.
+
+By implementing this approach, we ensure an optimal and efficient method to find the longest common prefix in a given set of strings.
